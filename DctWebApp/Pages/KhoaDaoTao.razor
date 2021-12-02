@@ -1,0 +1,31 @@
+﻿@page "/khoa-dao-tao"
+
+@using DctWebApp.Services
+@inject KhoaDaoTaoService KDTService
+
+@using DctApi.Shared.Models
+
+<h3>KhoaDaoTao</h3>
+
+@if (kdt == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>@kdt.ID</p>
+    <p>@kdt.NoiDung</p>
+    <p>@kdt.HuongDan</p>
+    <a>@kdt.URL</a>
+}
+<p></p>
+
+@code {
+    private KhoaDaoTaoEntity kdt;
+
+    protected override async Task OnInitializedAsync()
+    {
+        kdt = await KDTService.GetKhoaDaoTaoAsync();
+
+    }
+}

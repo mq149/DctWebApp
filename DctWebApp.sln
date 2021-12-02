@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DctWebApp", "DctWebApp\DctWebApp.csproj", "{6FAB924D-B921-4DB4-8B0C-EB6E6D209DAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DctWebApp", "DctWebApp\DctWebApp.csproj", "{6FAB924D-B921-4DB4-8B0C-EB6E6D209DAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DctApi.Shared", "..\DctAPI\DctApi.Shared\DctApi.Shared.csproj", "{DA3A0342-7268-4906-B0FF-2D9874684E89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{6FAB924D-B921-4DB4-8B0C-EB6E6D209DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FAB924D-B921-4DB4-8B0C-EB6E6D209DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FAB924D-B921-4DB4-8B0C-EB6E6D209DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA3A0342-7268-4906-B0FF-2D9874684E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3A0342-7268-4906-B0FF-2D9874684E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3A0342-7268-4906-B0FF-2D9874684E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3A0342-7268-4906-B0FF-2D9874684E89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
