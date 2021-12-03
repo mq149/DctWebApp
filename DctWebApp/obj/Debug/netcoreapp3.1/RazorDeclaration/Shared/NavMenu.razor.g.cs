@@ -83,7 +83,7 @@ using DctWebApp.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 28 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\Shared\NavMenu.razor"
+#line 33 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

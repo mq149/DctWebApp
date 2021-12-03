@@ -1,31 +1,33 @@
 ﻿@page "/khoa-dao-tao"
+@layout DCTShipperLayout
 
 @using DctWebApp.Services
 @inject KhoaDaoTaoService KDTService
 
 @using DctApi.Shared.Models
 
-<h3>KhoaDaoTao</h3>
-
-@if (kdt == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <p>@kdt.ID</p>
-    <p>@kdt.NoiDung</p>
-    <p>@kdt.HuongDan</p>
-    <a>@kdt.URL</a>
-}
-<p></p>
+<link href="../css/khoa-dao-tao.css" rel="stylesheet" />
+<div class="page-container">
+    <div class="khoa-dao-tao-container">
+        <div class="video-container">
+            <iframe class="video" 
+                    src="https://www.youtube.com/embed/LcRG816Syvc" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+        </div>
+        <button class="button filled">Button A</button>
+        <button class="button">Button B</button>
+    </div>
+</div>
 
 @code {
     private KhoaDaoTaoEntity kdt;
 
     protected override async Task OnInitializedAsync()
     {
-        kdt = await KDTService.GetKhoaDaoTaoAsync();
+        // kdt = await KDTService.GetKhoaDaoTaoAsync();
 
     }
 }
