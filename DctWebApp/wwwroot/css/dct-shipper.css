@@ -1,0 +1,41 @@
+﻿#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.nav-bar {
+    height: 80px;
+    width: 100vw;
+}
+
+#main-content {
+    flex: 1;
+}
+
+.color-pri-light {
+    background-color: #69D84F
+}
+
+.color-pri-dark {
+    background-color: #58B742
+}
+
+.button {
+    border-radius: 8px;
+    min-height: 50px;
+    min-width: 120px;
+    border: 0.5px #58B742 solid;
+    color: #58B742;
+    background-color: white;
+}
+
+.button.filled {
+    background-color: #58B742;
+    color: white;
+}
+
+.shadow {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
