@@ -8,18 +8,25 @@
 
 <link href="../css/khoa-dao-tao.css" rel="stylesheet" />
 <div class="page-container">
-    <div class="khoa-dao-tao-container">
-        <div class="video-container">
-            <iframe class="video" 
-                    src="https://www.youtube.com/embed/LcRG816Syvc" 
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>
+    @if (kdt == null)
+    {
+        <p>Đang tải...</p>
+    }
+    else
+    {
+        <div class="khoa-dao-tao-container">
+            <div class="video-container">
+                <iframe class="video"
+                        src="@kdt.URL"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            </div>
+            <button class="button filled" id="#take-test">Làm bài trắc nghiệm đầu vào</button>
+            <button class="button" id="back">Quay lại</button>
         </div>
-        <button class="button filled">Button A</button>
-        <button class="button">Button B</button>
-    </div>
+    }
 </div>
 
 @code {
@@ -27,7 +34,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // kdt = await KDTService.GetKhoaDaoTaoAsync();
-
+        kdt = await KDTService.GetKhoaDaoTaoAsync();
     }
 }
