@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DctWebApp", "DctWebApp\DctW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DctApi.Shared", "..\DctAPI\DctApi.Shared\DctApi.Shared.csproj", "{DA3A0342-7268-4906-B0FF-2D9874684E89}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DctAPI", "..\DctAPI\DctAPI\DctAPI.csproj", "{8997F6BB-8137-400D-953A-18AABF7280D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DA3A0342-7268-4906-B0FF-2D9874684E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA3A0342-7268-4906-B0FF-2D9874684E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA3A0342-7268-4906-B0FF-2D9874684E89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8997F6BB-8137-400D-953A-18AABF7280D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8997F6BB-8137-400D-953A-18AABF7280D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8997F6BB-8137-400D-953A-18AABF7280D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8997F6BB-8137-400D-953A-18AABF7280D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

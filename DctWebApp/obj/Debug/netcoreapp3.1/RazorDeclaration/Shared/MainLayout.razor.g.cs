@@ -75,6 +75,48 @@ using DctWebApp.Shared;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 10 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctWebApp.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 11 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctWebApp.Helpers;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 12 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 13 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using System.Text.Json;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 14 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctApi.Shared.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctWebApp.Data;
+
+#line default
+#line hidden
+#nullable disable
     public partial class MainLayout : LayoutComponentBase
     {
         #pragma warning disable 1998

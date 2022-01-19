@@ -31,11 +31,34 @@
     background-color: white;
 }
 
-.button.filled {
-    background-color: #58B742;
-    color: white;
-}
+    .button.filled {
+        background-color: #58B742;
+        color: white;
+    }
 
 .shadow {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+
+a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    color: initial;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.validation-message {
+    font-size: 14px;
+    font-weight: 600;
 }

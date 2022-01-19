@@ -75,6 +75,48 @@ using DctWebApp.Shared;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 10 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctWebApp.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 11 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctWebApp.Helpers;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 12 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 13 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using System.Text.Json;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 14 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctApi.Shared.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\_Imports.razor"
+using DctWebApp.Data;
+
+#line default
+#line hidden
+#nullable disable
     public partial class NavMenu : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
@@ -83,8 +125,9 @@ using DctWebApp.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 33 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\Shared\NavMenu.razor"
+#line 59 "C:\Users\quany\Documents\Projects\DctWebApp\DctWebApp\Shared\NavMenu.razor"
        
+    private bool authorized = false;
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -94,9 +137,16 @@ using DctWebApp.Shared;
         collapseNavMenu = !collapseNavMenu;
     }
 
+    protected override void OnInitialized()
+    {
+        AccountService.Initialize();
+        authorized = AccountService.IsAuthorized();
+    }
+
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IAccountService AccountService { get; set; }
     }
 }
 #pragma warning restore 1591

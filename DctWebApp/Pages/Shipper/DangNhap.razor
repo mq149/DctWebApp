@@ -1,6 +1,93 @@
 ﻿@page "/shipper/dang-nhap"
 @layout DCTShipperLayout
 
+@inject ShipperDangNhapService shipperDangNhapService
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+
+<link href="../css/shipper-dang-nhap.css" rel="stylesheet" defer />
+<div class="page-container">
+
+    <div class="login-container">
+        <div class="login-form-container">
+            @*<div class="option-button-container">
+                    <div class="button-container">
+                        <button class="button disabled">Đăng nhập</button>
+                        <a class="button filled" href="/shipper/dang-ky">Đăng ký</a>
+                    </div>
+                    <div class="divider"></div>
+                </div>*@
+            <EditForm EditContext="@context">
+                <class class="login-form">
+                    <DataAnnotationsValidator />
+                    <input placeholder="Số điện thoại" id="phone-number" type="text" @bind-value="shipperLogin.SDT" />
+                    <ValidationMessage For="@(() => shipperLogin.SDT)"></ValidationMessage>
+                    <input placeholder="Mật khẩu" id="password" type="password" @bind-value="shipperLogin.MatKhau" />
+                    <ValidationMessage For="@(() => shipperLogin.MatKhau)"></ValidationMessage>
+                    <button class="button filled" id="login" @onclick="@DangNhapShipper">Đăng nhập</button>
+                    <label>Bạn chưa có tài khoản? Hãy <a href="/shipper/dang-ky">đăng ký</a> ngay</label>
+                    <div class="or-container">
+                        <div class="divider"></div>
+                        <label>hoặc</label>
+                        <div class="divider"></div>
+                    </div>
+                    <button class="button" id="login">Đăng nhập vơi Google</button>
+                </class>
+            </EditForm>
+        </div>
+        <div class="login-image-container"></div>
+    </div>
+
+</div>
+
 @code {
+    private EditContext context;
+    private ShipperLogin shipperLogin = new ShipperLogin();
+
+    // Main functions
+    protected override void OnInitialized()
+    {
+        if (AccountService.user != null)
+        {
+            NavigationManager.NavigateTo("");
+        }
+        context = new EditContext(shipperLogin);
+        base.OnInitializedAsync();
+    }
+
+    public async Task DangNhapShipper()
+    {
+        if (!context.Validate())
+        {
+            return;
+        }
+        var postBody = shipperLogin.toJSON();
+        var result = await shipperDangNhapService.DangNhap(postBody);
+
+        Console.WriteLine(result);
+
+        await JsRuntime.InvokeVoidAsync("alert", result.Item2);
+        var user = new User(result.Item2);
+        await AccountService.Login(user);
+        NavigationManager.NavigateTo("/shipper/ho-so");
+    }
+
+    public class ShipperLogin
+    {
+        [Required(ErrorMessage = "Vui lòng cung cấp số điện thoại")]
+        public string SDT { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
+        public string MatKhau { get; set; }
+
+        public string toJSON()
+        {
+            return JsonSerializer.Serialize(new
+            {
+                username = this.SDT,
+                password = this.MatKhau
+            });
+        }
+    }
 
 }
