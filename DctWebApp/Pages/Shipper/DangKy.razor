@@ -7,7 +7,7 @@
 @inject HttpClient HttpClient
 @inject IJSRuntime JsRuntime
 
-<link href="../css/shipper-dang-ky.css" rel="stylesheet" defer />
+<link href="../css/shipper-dang-ky.css" rel="stylesheet" />
 <div class="page-container">
 
     <div class="register-container">
@@ -21,7 +21,7 @@
                 </div>*@
 
             <EditForm EditContext="@context">
-                <class class="register-form">
+                <div class="register-form">
                     <DataAnnotationsValidator />
                     <input placeholder="Họ và tên" id="fullname" type="text" @bind-value="shipperRegistration.HoTen" />
                     <ValidationMessage For="@(() => shipperRegistration.HoTen)"></ValidationMessage>
@@ -47,7 +47,7 @@
                     </div>
                     <button class="button filled" id="register" @onclick="@DangKyShipper">Đăng ký</button>
                     <label>Bạn đã có tài khoản? Hãy <a href="/shipper/dang-nhap">đăng nhập</a> ngay</label>
-                </class>
+                </div>
             </EditForm>
 
         </div>

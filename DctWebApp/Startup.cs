@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Tewr.Blazor.FileReader;
 
 namespace DctWebApp
 {
@@ -35,10 +36,12 @@ namespace DctWebApp
             services.AddSingleton<KhoaDaoTaoService>();
             services.AddSingleton<ShipperDangNhapService>();
             services.AddSingleton<ShipperDangKyService>();
+            services.AddSingleton<HoSoService>();
             services.AddScoped<HttpClient>();
             services.AddScoped<ILocalStorageService, LocalStorageService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddSingleton(sp => sp.GetRequiredService<IAccountService>().Initialize());
+            services.AddFileReaderService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

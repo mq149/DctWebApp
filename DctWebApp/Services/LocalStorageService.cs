@@ -7,6 +7,7 @@ namespace DctWebApp.Services
     public interface ILocalStorageService
     {
         Task<T> GetItem<T>(string key);
+        Task<string> GetItemJSON(string key);
         Task SetItem<T>(string key, T value);
         Task RemoveItem(string key);
     }
@@ -28,6 +29,16 @@ namespace DctWebApp.Services
                 return default;
 
             return JsonSerializer.Deserialize<T>(json);
+        }
+
+        public async Task<string> GetItemJSON(string key)
+        {
+            var json = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
+
+            if (json == null)
+                return default;
+
+            return json;
         }
 
         public async Task SetItem<T>(string key, T value)

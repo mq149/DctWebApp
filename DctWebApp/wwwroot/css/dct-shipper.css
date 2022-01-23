@@ -1,4 +1,13 @@
-﻿#app {
+﻿:root {
+    --primary-light: #69D84F;
+    --primary-dark: #58B742;
+    --dct-light-gray: #F1F1F1;
+    --dct-gray: #C4C4C4;
+    --warn: #EBBA46;
+    --error: #ED1818;
+}
+
+#app {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -6,7 +15,8 @@
 }
 
 .nav-bar {
-    height: 80px;
+    min-height: 80px;
+    z-index: 3;
     width: 100vw;
 }
 
@@ -61,4 +71,12 @@ a.button {
 .validation-message {
     font-size: 14px;
     font-weight: 600;
+}
+
+.warn {
+    color: var(--warn);
+}
+
+.error {
+    color: var(--error);
 }

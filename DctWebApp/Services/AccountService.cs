@@ -12,7 +12,8 @@ namespace DctWebApp.Services
         Task Initialize();
         Task Login(User user);
         Task Logout();
-        bool IsAuthorized();
+        Task<User> CurrentUser();
+        Task<bool> IsAuthorized();
     }
 
     public class AccountService : IAccountService
@@ -44,13 +45,25 @@ namespace DctWebApp.Services
 
         public async Task Logout()
         {
-            user = null;
-            await _localStorageService.RemoveItem(_userKey);
+            user = await _localStorageService.GetItem<User>(_userKey);
+            if (user != null)
+            {
+                user = null;
+                await _localStorageService.RemoveItem(_userKey);
+            }
             _navigationManager.NavigateTo("/shipper/dang-nhap");
         }
 
-        public bool IsAuthorized()
+        public async Task<User> CurrentUser()
         {
+            var json = await _localStorageService.GetItemJSON(_userKey);
+            user = new User(json);
+            return user;
+        }
+
+        public async Task<bool> IsAuthorized()
+        {
+            await Initialize();
             return user != null;
         }
     }

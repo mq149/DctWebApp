@@ -67,10 +67,13 @@
 
         Console.WriteLine(result);
 
-        await JsRuntime.InvokeVoidAsync("alert", result.Item2);
-        var user = new User(result.Item2);
-        await AccountService.Login(user);
-        NavigationManager.NavigateTo("/shipper/ho-so");
+        if (bool.Parse(result.Item1.ToString())) {
+            var user = new User(result.Item2);
+            await AccountService.Login(user);
+            NavigationManager.NavigateTo("/shipper/ho-so");
+            return;
+        }
+        await JsRuntime.InvokeVoidAsync("alert",  result.Item2);
     }
 
     public class ShipperLogin

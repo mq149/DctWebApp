@@ -12,6 +12,17 @@ namespace DctWebApp.Data
         public string Email { get; set; }
         public string Token { get; set; }
 
+        public User() { }
+
+        public User(int Id, string SDT, string HoTen, string Email, string Token)
+        {
+            this.Id = Id;
+            this.SDT = SDT;
+            this.HoTen = HoTen;
+            this.Email = Email;
+            this.Token = Token;
+        }
+
         public User(string jsonString)
         {
             JObject data = JObject.Parse(jsonString);

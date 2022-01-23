@@ -33,7 +33,7 @@ namespace DctWebApp.Services
             {
                 return Tuple.Create(false, exception.Message);
             }
-            return Tuple.Create(false, "");
+            return Tuple.Create(false, "Đã xảy ra lỗi, vui lòng thử lại");
         }
     }
 }

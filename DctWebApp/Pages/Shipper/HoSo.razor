@@ -2,8 +2,488 @@
 @attribute [Authorize]
 @layout DCTShipperLayout
 
-<h3>HoSo</h3>
-<a href="/shipper/khoa-dao-tao">Khoa Dao Tao</a>
+@inject HoSoService hoSoService
+@inject IAccountService AccountService
+@inject ILocalStorageService LocalStorageService
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime
+@inject IWebHostEnvironment Environment
+@using Tewr.Blazor.FileReader
+@inject IFileReaderService FileReaderService
+
+<link href="../css/ho-so.css" rel="stylesheet" />
+@*<a href="/shipper/khoa-dao-tao">Khoa Dao Tao</a>*@
+
+<div class="page-container">
+    @if (currentUser != null)
+    {
+        <div class="profile-form-container">
+
+            <p class="guide-text">Note that this only provides a hint to the browser as to what file-types to display to the user, but this can be easily circumvented, so you should always validate the uploaded file on the server also.</p>
+
+            <div class="progress-container">
+                <div class="progress" style="width: 50%;"></div>
+            </div>
+
+            <EditForm EditContext="@context">
+                @*THÔNG TIN CÁ NHÂN BEGIN*@
+                <div class="information-container" id="personal-information">
+                    <h1 class="">Thông tin cá nhân</h1>
+
+                    @*THÔNG TIN CHUNG*@
+                    <div class="section-container" id="@HoSoSection.Section.GeneralInformation">
+                        <div class="section-header">
+                            <h2>Thông Tin Chung</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.GeneralInformation))"><span class="material-icons button-icon">@SetToggleIcon(state.generalInformation)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.generalInformation)">
+                            <div class="input-container">
+                                <label>Họ và tên</label>
+                                <input type="text" disabled value="@currentUser.HoTen" />
+                            </div>
+                            <div class="input-container">
+                                <label>Ngày sinh <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="date" value="2022-01-20" />
+                            </div>
+                            <div class="input-container">
+                                <label>Giới tính <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" value="2022-01-20" />
+                            </div>
+                            <div class="input-container">
+                                <label>Nghề nghiệp </label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Số Nhà/Tổ | Địa Chỉ Thường Trú <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Đường | Địa Chỉ Thường Trú <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Xã/Phường | Địa Chỉ Thường Trú <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Quận/Huyện | Địa Chỉ Thường Trú <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Tỉnh/Thành Phố | Địa Chỉ Thường Trú <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*ẢNH CHÂN DUNG*@
+                    <div class="section-container" id="@HoSoSection.Section.ProfilePicture">
+                        <div class="section-header">
+                            <h2>Ảnh Chân Dung</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.ProfilePicture))"><span class="material-icons button-icon">@SetToggleIcon(state.profilePicture)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.profilePicture)">
+                            <div class="image-container">
+                                <label>Ảnh Chân Dung <label class="status warn">(Bắt buộc)</label></label>
+                                <div class="image-preview">
+                                    <img src="@GetImage(hoSo.Avatar)" />
+                                    <input type="file" accept="image/*"
+                                           @ref="AvatarInput"
+                                           @onchange="@(() => UploadImage(AvatarInput, HoSoSection.ImageInput.Avatar))" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*CMND*@
+                    <div class="section-container" id="@HoSoSection.Section.Identity">
+                        <div class="section-header">
+                            <h2>CMND / CCCD / Hộ Chiếu</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.Identity))"><span class="material-icons button-icon">@SetToggleIcon(state.identity)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.identity)">
+                            <div class="column">
+                                <div class="image-container">
+                                    <label>Mặt Trước <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.CMNDTruoc)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="CMNDTruocInput"
+                                               @onchange="@(() => UploadImage(CMNDTruocInput, HoSoSection.ImageInput.CMNDTruoc))" />
+                                    </div>
+                                </div>
+                                <div class="image-container">
+                                    <label>Mặt Sau <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.CMNDSau)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="CMNDSauInput"
+                                               @onchange="@(() => UploadImage(CMNDSauInput, HoSoSection.ImageInput.CMNDSau))" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <label>Số CMND / CCCD / Hộ Chiếu <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Ngày Cấp <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="date" value="2022-01-20" />
+                            </div>
+                            <div class="input-container">
+                                <label>Nơi Cấp <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*BẰNG LÁI*@
+                    <div class="section-container" id="@HoSoSection.Section.DriverLicense">
+                        <div class="section-header">
+                            <h2>Bằng Lái Xe</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.DriverLicense))"><span class="material-icons button-icon">@SetToggleIcon(state.driverLicense)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.driverLicense)">
+                            <div class="input-container">
+                                <label>Số Bằng Lái Xe <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Hạng Bằng Lái Xe <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="column">
+                                <div class="image-container">
+                                    <label>Mặt Trước <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.BLXTruoc)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="BLXTruocInput"
+                                               @onchange="@(() => UploadImage(BLXTruocInput, HoSoSection.ImageInput.BLXTruoc))" />
+                                    </div>
+                                </div>
+                                <div class="image-container">
+                                    <label>Mặt Sau <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.BLXSau)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="BLXSauInput"
+                                               @onchange="@(() => UploadImage(BLXSauInput, HoSoSection.ImageInput.BLXSau))" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*TÀI KHOẢN NGÂN HÀNG*@
+                    <div class="section-container" id="@HoSoSection.Section.BankAccount">
+                        <div class="section-header">
+                            <h2>Tài Khoản Ngân Hàng</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.BankAccount))"><span class="material-icons button-icon">@SetToggleIcon(state.bankAccount)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.bankAccount)">
+                            <div class="input-container">
+                                <label>Ngân Hàng <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Số Tài Khoản <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*GIẤY TỜ KHÁC*@
+                    <div class="section-container" id="@HoSoSection.Section.OtherInformation">
+                        <div class="section-header">
+                            <h2>Thông Tin Khác</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.OtherInformation))"><span class="material-icons button-icon">@SetToggleIcon(state.otherInformation)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.otherInformation)">
+
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*CAM KẾT*@
+                    <div class="section-container" id="@HoSoSection.Section.Agreements">
+                        <div class="section-header">
+                            <h2>Cam Kết</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.Agreements))"><span class="material-icons button-icon">@SetToggleIcon(state.agreements)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.agreements)">
+                            <div class="checkbox-container">
+                                <input type="checkbox" />
+                                <label>Tôi xin cam kết</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" />
+                                <label>Tôi xin cam kết</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" />
+                                <label>Tôi xin cam kết</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" />
+                                <label>Tôi xin cam kết</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                </div>
+                @*THÔNG TIN CÁ NHÂN END*@
+
+                @*THÔNG TIN PHƯƠNG TIỆN BEGIN*@
+                <div id="vehicle-information" class="information-container">
+                    <h1 class="">Thông tin phương tiện di chuyển</h1>
+
+                    @*ẢNH XE*@
+                    <div class="section-container" id="@HoSoSection.Section.VehiclePictures">
+                        <div class="section-header">
+                            <h2>Hình Ảnh Xe</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.VehiclePictures))"><span class="material-icons button-icon">@SetToggleIcon(state.vehiclePictures)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.vehiclePictures)">
+                            <div class="column">
+                                <div class="image-container">
+                                    <label>Hình Đầu Xe <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.HinhDauXe)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="HinhDauXeInput"
+                                               @onchange="@(() => UploadImage(HinhDauXeInput, HoSoSection.ImageInput.HinhDauXe))" />
+                                    </div>
+                                </div>
+                                <div class="image-container">
+                                    <label>Hình Đuôi Xe <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.HinhDuoiXe)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="HinhDuoiXeInput"
+                                               @onchange="@(() => UploadImage(HinhDuoiXeInput, HoSoSection.ImageInput.HinhDuoiXe))" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-container">
+                                <label>Giấy Kiểm Tra Xe <label class="status warn">(Bắt buộc)</label></label>
+                                <div class="image-preview">
+                                    <img src="@GetImage(hoSo.GiayKTXe)" />
+                                    <input type="file" accept="image/*"
+                                           @ref="GiayKTXeInput"
+                                           @onchange="@(() => UploadImage(GiayKTXeInput, HoSoSection.ImageInput.GiayKTXe))" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*GIẤY ĐĂNG KÝ XE*@
+                    <div class="section-container" id="@HoSoSection.Section.VehicleRegistration">
+                        <div class="section-header">
+                            <h2>Giấy Đăng Ký Xe</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.VehicleRegistration))"><span class="material-icons button-icon">@SetToggleIcon(state.vehicleRegistration)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.vehicleRegistration)">
+                            <div class="column">
+                                <div class="image-container">
+                                    <label>Mặt Trước <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.GiayDKXeTruoc)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="GiayDKXeTruocInput"
+                                               @onchange="@(() => UploadImage(GiayDKXeTruocInput, HoSoSection.ImageInput.GiayDKXTruoc))" />
+                                    </div>
+                                </div>
+                                <div class="image-container">
+                                    <label>Mặt Sau <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.GiayDKXeSau)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="GiayDKXeSauInput"
+                                               @onchange="@(() => UploadImage(GiayDKXeSauInput, HoSoSection.ImageInput.GiayDKXSau))" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <label>Biển Số Xe <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Dòng Xe <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                            <div class="input-container">
+                                <label>Năm Sản Xuất Xe <label class="status warn">(Bắt buộc)</label></label>
+                                <input type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    @*BẢO HIỂM XE*@
+                    <div class="section-container" id="@HoSoSection.Section.VehicleInsurance">
+                        <div class="section-header">
+                            <h2>Bảo Hiểm Xe</h2>
+                            <label class="status">Hoàn tất/Bắt buộc</label>
+                            <button class="show-detail" @onclick="@(() => @ToggleVisibleSection(HoSoSection.Section.VehicleInsurance))"><span class="material-icons button-icon">@SetToggleIcon(state.vehicleInsurance)</span></button>
+                        </div>
+                        <div class="section-detail" style="@Display(state.vehicleInsurance)">
+                            <div class="column">
+                                <div class="image-container">
+                                    <label>Mặt Trước <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.BaoHiemXeTruoc)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="BHXeTruocInput"
+                                               @onchange="@(() => UploadImage(BHXeTruocInput, HoSoSection.ImageInput.BHXeTruoc))" />
+                                    </div>
+                                </div>
+                                <div class="image-container">
+                                    <label>Mặt Sau <label class="status warn">(Bắt buộc)</label></label>
+                                    <div class="image-preview">
+                                        <img src="@GetImage(hoSo.BaoHiemXeSau)" />
+                                        <input type="file" accept="image/*"
+                                               @ref="BHXeSauInput"
+                                               @onchange="@(() => UploadImage(BHXeSauInput, HoSoSection.ImageInput.BHXeSau))" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                </div>
+                @*THÔNG TIN PHƯƠNG TIỆN END*@
+
+
+            </EditForm>
+
+        </div>
+    }
+    else
+    {
+        <p>Loading...</p>
+    }
+    <div class="submit-container">
+        <button class="submit-button button filled" @onclick="@Submit">Nộp Hồ Sơ</button>
+    </div>
+</div>
+
+
 @code {
+    private EditContext context;
+
+    private HoSoSection state = new HoSoSection();
+    private HoSoModel hoSo = new HoSoModel();
+    private User currentUser = new User();
+
+
+    public ElementReference AvatarInput;
+    public ElementReference CMNDTruocInput;
+    public ElementReference CMNDSauInput;
+    public ElementReference BLXTruocInput;
+    public ElementReference BLXSauInput;
+    public ElementReference HinhDauXeInput;
+    public ElementReference HinhDuoiXeInput;
+    public ElementReference GiayKTXeInput;
+    public ElementReference GiayDKXeTruocInput;
+    public ElementReference GiayDKXeSauInput;
+    public ElementReference BHXeTruocInput;
+    public ElementReference BHXeSauInput;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = new EditContext(hoSo);
+        currentUser = await AccountService.CurrentUser();
+        var shipperId = await hoSoService.GetCurrentShipperId(currentUser.Id);
+        if (shipperId != null)
+        {
+            hoSo.ShipperId = shipperId.Value;
+        }
+    }
+
+
+    // Event/UI functions
+    public void ToggleVisibleSection(string section)
+    {
+        state.ToggleVisibleSection(section);
+    }
+
+    public string Display(bool current)
+    {
+        return current ? "display: flex" : "display: none";
+    }
+
+    public string SetToggleIcon(bool current)
+    {
+        return current ? "expand_less" : "expand_more";
+    }
+
+    public string GetImage(HinhAnhModel hinhAnh)
+    {
+        if (hinhAnh == null) return "";
+        return hinhAnh.URL == "" ? "" : hinhAnh.URL;
+    }
+
+    // API calls
+    public async Task UploadImage(ElementReference input, string fileName)
+    {
+        if (currentUser == null) return;
+
+        HinhAnhModel hinhAnh = null;
+        var files = await FileReaderService.CreateReference(input).EnumerateFilesAsync();
+        var file = files.First();
+        if (file != null)
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            using (var ms = await file.CreateMemoryStreamAsync(4 * 1024))
+            {
+                try
+                {
+                    var content = new MultipartFormDataContent();
+                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                    content.Add(new StreamContent(ms, Convert.ToInt32(ms.Length)), "image", fileInfo.Name);
+                    content.Add(new StringContent(currentUser.SDT + "-" + fileName), "fileName");
+                    content.Add(new StringContent(currentUser.SDT), "user");
+                    hinhAnh = await hoSoService.UploadImage(content);
+                }
+                catch (HttpRequestException exception)
+                {
+                    await JsRuntime.InvokeVoidAsync("alert", exception.Message);
+                }
+            }
+        }
+
+        if (hinhAnh.URL != "")
+        {
+            hoSo.SetHinhAnh(fileName, hinhAnh);
+        } else
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Lỗi không thể tải ảnh");
+        }
+
+        return;
+    }
+
+    public async Task Submit()
+    {
+        await JsRuntime.InvokeVoidAsync("alert", hoSo.toJSON());
+    }
 
 }
