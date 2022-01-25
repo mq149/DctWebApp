@@ -1,0 +1,11 @@
+﻿@page "/shipper/dang-xuat"
+@layout DCTShipperLayout
+
+@inject IAccountService AccountService
+
+@code { 
+    protected override async void OnInitialized()
+    {
+        await AccountService.Logout();
+    } 
+}

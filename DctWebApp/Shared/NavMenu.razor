@@ -1,4 +1,6 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject IAccountService AccountService
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">DctWebApp</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -23,10 +25,33 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="khoa-dao-tao">
+            <NavLink class="nav-link" href="shipper/dang-ky">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Shipper Dang Ky
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="shipper/dang-nhap">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Shipper Dang Nhap
+            </NavLink>
+        </li>
+        
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="shipper/ho-so">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Ho So
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="shipper/khoa-dao-tao">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Khoa Dao Tao
             </NavLink>
         </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="shipper/dang-xuat">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Dang xuat
+            </NavLink>
+        </li>
+        
+
     </ul>
 </div>
 

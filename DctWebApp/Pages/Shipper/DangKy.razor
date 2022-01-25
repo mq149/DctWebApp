@@ -1,0 +1,138 @@
+﻿@page "/shipper/dang-ky"
+@layout DCTShipperLayout
+
+@inject ShipperDangKyService shipperDangKyService
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime
+
+<link href="../css/shipper-dang-ky.css" rel="stylesheet" />
+<div class="page-container">
+
+    <div class="register-container">
+        <div class="register-form-container">
+            @*<div class="option-button-container">
+                    <div class="button-container">
+                        <a class="button filled" href="/shipper/dang-nhap">Đăng nhập</a>
+                        <button class="button disabled">Đăng ký</button>
+                    </div>
+                    <div class="divider"></div>
+                </div>*@
+
+            <EditForm EditContext="@context">
+                <div class="register-form">
+                    <DataAnnotationsValidator />
+                    <input placeholder="Họ và tên" id="fullname" type="text" @bind-value="shipperRegistration.HoTen" />
+                    <ValidationMessage For="@(() => shipperRegistration.HoTen)"></ValidationMessage>
+                    <input placeholder="Số điện thoại" id="phone-number" type="text" @bind-value="shipperRegistration.SDT" />
+                    <ValidationMessage For="@(() => shipperRegistration.SDT)"></ValidationMessage>
+                    <input placeholder="Địa chỉ Email" id="email" type="text" @bind-value="shipperRegistration.Email" />
+                    <ValidationMessage For="@(() => shipperRegistration.Email)"></ValidationMessage>
+                    <input placeholder="Mật khẩu" id="password" type="password" @bind-value="shipperRegistration.MatKhau" />
+                    <ValidationMessage For="@(() => shipperRegistration.MatKhau)"></ValidationMessage>
+                    <input placeholder="Xác nhận mật khẩu" id="comfirm-password" type="password" @bind-value="shipperRegistration.XacNhanMatKhau" />
+                    <ValidationMessage For="@(() => shipperRegistration.XacNhanMatKhau)"></ValidationMessage>
+                    <div class="agreements-container">
+                        <div class="agreements">
+                            <input id="agree" type="checkbox" checked="@agreementsChecked" @onchange="@((args) => AgreementsOnChanged(args))" />
+                            <label>
+                                Tôi cam kết đã đọc và đồng ý với các <a href="#">Điều Khoản, Điều Kiện và các Chính Sách Riêng Tư</a> của Đi Chợ Thuê
+                            </label>
+                        </div>
+                        @if (agreementsError)
+                        {
+                            <p class="error-message">Bạn chưa đồng ý với các Điều Khoản của ĐI CHỢ THUÊ</p>
+                        }
+                    </div>
+                    <button class="button filled" id="register" @onclick="@DangKyShipper">Đăng ký</button>
+                    <label>Bạn đã có tài khoản? Hãy <a href="/shipper/dang-nhap">đăng nhập</a> ngay</label>
+                </div>
+            </EditForm>
+
+        </div>
+        <div class="register-image-container"></div>
+    </div>
+</div>
+
+@code {
+
+    private EditContext context;
+    private ShipperRegistration shipperRegistration = new ShipperRegistration();
+
+    private bool agreementsChecked = false;
+    private bool agreementsError = false;
+
+    // Event functions
+    private void AgreementsOnChanged(ChangeEventArgs args)
+    {
+        agreementsChecked = bool.Parse(args.Value.ToString());
+        Console.WriteLine(agreementsChecked);
+    }
+
+    // Main functions
+
+    protected override void OnInitialized()
+    {
+        if (AccountService.user != null)
+        {
+            NavigationManager.NavigateTo("");
+        }
+        context = new EditContext(shipperRegistration);
+        base.OnInitializedAsync();
+    }
+
+    private async Task DangKyShipper()
+    {
+        if (!context.Validate())
+        {
+            return;
+        }
+        agreementsError = !agreementsChecked;
+        if (!agreementsChecked)
+        {
+            return;
+        }
+
+        var postBody = shipperRegistration.toJSON();
+        var result = await shipperDangKyService.DangKy(postBody);
+
+        Console.WriteLine(result);
+
+        await JsRuntime.InvokeVoidAsync("alert", result.Item2);
+        NavigationManager.NavigateTo("/shipper/dang-nhap");
+    }
+
+    public class ShipperRegistration
+    {
+
+        [Required(ErrorMessage = "Vui lòng cung cấp số điện thoại"),
+            RegularExpression(@"((09|03|07|08|05)+([0-9]{8})\b)", ErrorMessage = "Số điện thoại không hợp lệ")]
+        public string SDT { get; set; }
+        [Required(ErrorMessage = "Vui lòng cung cấp họ và tên")]
+        public string HoTen { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu"),
+            RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$",
+            ErrorMessage = "Mật khẩu phải có ít nhất 8 ký tự, một ký tự số, chữ in hoa, ký tự đặc biệt")]
+        public string MatKhau { get; set; }
+        [Compare("MatKhau", ErrorMessage = "Xác nhận mật khẩu không trùng khớp")]
+        public string XacNhanMatKhau { get; set; }
+        [Required(ErrorMessage = "Vui lòng cung cấp địa chỉ email"),
+            RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Email không hợp lệ")]
+        public string Email { get; set; }
+
+        public string toJSON()
+        {
+            return JsonSerializer.Serialize(new
+            {
+                SDT = this.SDT,
+                HoTen = this.HoTen,
+                MatKhau = this.MatKhau,
+                Email = this.Email
+            });
+        }
+
+    }
+
+
+}

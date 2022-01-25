@@ -1,4 +1,13 @@
-﻿#app {
+﻿:root {
+    --primary-light: #69D84F;
+    --primary-dark: #58B742;
+    --dct-light-gray: #F1F1F1;
+    --dct-gray: #C4C4C4;
+    --warn: #EBBA46;
+    --error: #ED1818;
+}
+
+#app {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -6,7 +15,8 @@
 }
 
 .nav-bar {
-    height: 80px;
+    min-height: 80px;
+    z-index: 3;
     width: 100vw;
 }
 
@@ -31,11 +41,42 @@
     background-color: white;
 }
 
-.button.filled {
-    background-color: #58B742;
-    color: white;
-}
+    .button.filled {
+        background-color: #58B742;
+        color: white;
+    }
 
 .shadow {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+
+a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    color: initial;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.validation-message {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.warn {
+    color: var(--warn);
+}
+
+.error {
+    color: var(--error);
 }
