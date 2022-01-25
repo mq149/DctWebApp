@@ -69,9 +69,14 @@
 
         if (bool.Parse(result.Item1.ToString())) {
             var user = new User(result.Item2);
-            await AccountService.Login(user);
-            NavigationManager.NavigateTo("/shipper/ho-so");
-            return;
+            var shipperResult = await shipperDangNhapService.GetShipper(user.Id);
+            if (shipperResult.Item1)
+            {
+                var shipper = new Shipper(shipperResult.Item2);
+                await AccountService.Login(user, shipper);
+                NavigationManager.NavigateTo("/shipper/ho-so");
+                return;
+            }
         }
         await JsRuntime.InvokeVoidAsync("alert",  result.Item2);
     }

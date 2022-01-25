@@ -114,6 +114,8 @@ button.show-detail > .button-icon {
     flex-flow: column nowrap;
     width: 50%;
     padding: 0 10px;
+    height: 200px;
+    object-fit: contain;
 }
 
 /* Inputs */

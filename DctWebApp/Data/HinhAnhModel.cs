@@ -9,8 +9,9 @@ namespace DctWebApp.Data
 {
     public class HinhAnhModel
     {
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("Id", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Id { get; set; }
+        [JsonProperty("Url")]
         public string URL { get; set; }
 
         public HinhAnhModel(string jsonString)

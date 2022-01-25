@@ -10,14 +10,19 @@ namespace DctWebApp.Data
 {
     public class DiaChiModel
     {
+        [JsonProperty("soNhaTo")]
         [DefaultValue("")]
         public string SoNhaTo { get; set; }
+        [JsonProperty("duong")]
         [DefaultValue("")]
         public string Duong { get; set; }
+        [JsonProperty("xaPhuong")]
         [DefaultValue("")]
         public string XaPhuong { get; set; }
+        [JsonProperty("quanHuyen")]
         [DefaultValue("")]
         public string QuanHuyen { get; set; }
+        [JsonProperty("tinhTP")]
         [DefaultValue("")]
         public string TinhTP { get; set; }
 

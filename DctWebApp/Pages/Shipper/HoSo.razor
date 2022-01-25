@@ -45,11 +45,11 @@
                             </div>
                             <div class="input-container">
                                 <label>Ngày sinh <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="date" value="2022-01-20" />
+                                <input type="date" @bind-value="hoSo.NgaySinh"/>
                             </div>
                             <div class="input-container">
                                 <label>Giới tính <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" value="2022-01-20" />
+                                <input type="text" @bind-value="hoSo.GioiTinh" />
                             </div>
                             <div class="input-container">
                                 <label>Nghề nghiệp </label>
@@ -130,15 +130,15 @@
                             </div>
                             <div class="input-container">
                                 <label>Số CMND / CCCD / Hộ Chiếu <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" />
+                                <input type="text" @bind-value="hoSo.CMND"/>
                             </div>
                             <div class="input-container">
                                 <label>Ngày Cấp <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="date" value="2022-01-20" />
+                                <input type="date" @bind-value="hoSo.CMNDNgayCap"/>
                             </div>
                             <div class="input-container">
                                 <label>Nơi Cấp <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" />
+                                <input type="text" @bind-value="hoSo.CMNDNoiCap"/>
                             </div>
                         </div>
                     </div>
@@ -154,11 +154,11 @@
                         <div class="section-detail" style="@Display(state.driverLicense)">
                             <div class="input-container">
                                 <label>Số Bằng Lái Xe <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" />
+                                <input type="text" @bind-value="hoSo.BLXSo"/>
                             </div>
                             <div class="input-container">
                                 <label>Hạng Bằng Lái Xe <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" />
+                                <input type="text" @bind-value="hoSo.BLXHang"/>
                             </div>
                             <div class="column">
                                 <div class="image-container">
@@ -322,15 +322,15 @@
                             </div>
                             <div class="input-container">
                                 <label>Biển Số Xe <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" />
+                                <input type="text" @bind-value="hoSo.BienSoXe"/>
                             </div>
                             <div class="input-container">
                                 <label>Dòng Xe <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" />
+                                <input type="text" @bind-value="hoSo.DongXe"/>
                             </div>
                             <div class="input-container">
                                 <label>Năm Sản Xuất Xe <label class="status warn">(Bắt buộc)</label></label>
-                                <input type="text" />
+                                <input type="text" @bind-value="hoSo.NamSXXe"/>
                             </div>
                         </div>
                     </div>
@@ -391,6 +391,7 @@
     private HoSoSection state = new HoSoSection();
     private HoSoModel hoSo = new HoSoModel();
     private User currentUser = new User();
+    private Shipper currentShipper = new Shipper();
 
 
     public ElementReference AvatarInput;
@@ -411,10 +412,12 @@
     {
         context = new EditContext(hoSo);
         currentUser = await AccountService.CurrentUser();
-        var shipperId = await hoSoService.GetCurrentShipperId(currentUser.Id);
-        if (shipperId != null)
+        currentShipper = await AccountService.CurrentShipper();
+        hoSo.ShipperId = currentShipper.Id;
+        var responseHoSo = await hoSoService.GetHoSoShipper(currentUser.Id);
+        if (responseHoSo != null)
         {
-            hoSo.ShipperId = shipperId.Value;
+            hoSo = responseHoSo;
         }
     }
 
@@ -438,7 +441,7 @@
     public string GetImage(HinhAnhModel hinhAnh)
     {
         if (hinhAnh == null) return "";
-        return hinhAnh.URL == "" ? "" : hinhAnh.URL;
+        return hinhAnh.URL == "" ? "/img/image-placeholder.png" : hinhAnh.URL;
     }
 
     // API calls
@@ -461,6 +464,7 @@
                     content.Add(new StreamContent(ms, Convert.ToInt32(ms.Length)), "image", fileInfo.Name);
                     content.Add(new StringContent(currentUser.SDT + "-" + fileName), "fileName");
                     content.Add(new StringContent(currentUser.SDT), "user");
+                    hinhAnh = new HinhAnhModel();
                     hinhAnh = await hoSoService.UploadImage(content);
                 }
                 catch (HttpRequestException exception)
@@ -483,7 +487,16 @@
 
     public async Task Submit()
     {
-        await JsRuntime.InvokeVoidAsync("alert", hoSo.toJSON());
+        bool success = await hoSoService.NopHoSoShipper(hoSo.toJSON());
+        if (success)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Nộp hồ sơ thành công");
+            NavigationManager.NavigateTo("/shipper/ho-so-success");
+            return;
+        } else
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Nộp hồ sơ không thành công");
+        }
     }
 
 }

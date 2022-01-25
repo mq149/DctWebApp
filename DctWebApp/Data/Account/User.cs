@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace DctWebApp.Data
+namespace DctWebApp.Data.Account
 {
     public class User
     {

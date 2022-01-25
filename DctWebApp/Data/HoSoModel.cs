@@ -62,7 +62,7 @@ namespace DctWebApp.Data
 
         public HoSoModel() {
             NgaySinh = null;
-            DiaChi = new DiaChiModel();
+            DiaChi = null;
             Avatar = new HinhAnhModel();
             CMNDTruoc = new HinhAnhModel();
             CMNDSau = new HinhAnhModel();
@@ -78,6 +78,29 @@ namespace DctWebApp.Data
             BaoHiemXeTruoc = new HinhAnhModel();
         }
 
+        public HoSoModel(string json)
+        {
+            var data = (IDictionary<string, object>)JsonConvert.DeserializeObject(json);
+            if (data.ContainsKey("user")) 
+            {
+                var user = (IDictionary<string, object>)data["user"];
+                GioiTinh = (string)data["gioiTinh"];
+            }
+            if (data.ContainsKey("shipper"))
+            {
+                var shipper = (IDictionary<string, object>)data["shipper"];
+                CMND = (string)shipper["cmnd"];
+                BienSoXe = (string)shipper["bienSo"];
+                DongXe = (string)shipper["dongXe"];
+            }
+            if(data.ContainsKey("hoSo"))
+            {
+                var hoSo = (IDictionary<string, object>)data["hoSo"];
+
+            }
+
+        }
+
         public string toJSON()
         {
             var hoSo = new
@@ -87,12 +110,12 @@ namespace DctWebApp.Data
                     ngaySinh = NgaySinh,
                     gioiTinh = GioiTinh,
                     avatarId = Avatar.Id,
-                    diaChi = DiaChi.toJSON()
+                    diaChi = DiaChi
                 },
                 shipper = new
                 {
-                    cMNDSo = CMND,
-                    bienSoXe = BienSoXe,
+                    cmnd = CMND,
+                    bienSo = BienSoXe,
                     dongXe = DongXe
                 },
                 hoSo = new
@@ -106,7 +129,7 @@ namespace DctWebApp.Data
                     bLXSo = BLXSo,
                     bLXHang = BLXHang,
                     bLXMatTruocId = BLXTruoc.Id,
-                    bLXSauId = BLXSau.Id,
+                    bLXMatSauId = BLXSau.Id,
                     phuongTienHinhDauId = HinhDauXe.Id,
                     phuongTienHinhDuoiId = HinhDuoiXe.Id,
                     giayKiemTraXeId = GiayKTXe.Id,
@@ -169,5 +192,18 @@ namespace DctWebApp.Data
 
         }
 
+        private DateTime DateTimeFromJSON(IDictionary<string, object> json)
+        {
+            //if (!string.IsNullOrEmpty())
+            //{
+            //    var day = json["date"]
+            //}
+            return DateTime.Now;
+        }
+
+        private string StringFromJSON(IDictionary<string, object> jsonData, string key)
+        {
+            return jsonData.ContainsKey(key) ? (string)jsonData[key] : "";
+        }
     }
 }
